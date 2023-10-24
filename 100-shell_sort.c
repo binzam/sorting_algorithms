@@ -1,38 +1,89 @@
 #include "sort.h"
-
 /**
- * shell_sort - sorts an array of integers in ascending order
- *				using the Shell sort algorithm, using the Knuth sequence
- * @array: array to sort
- * @size: size of the array
- * Return: Nothing
+ * swap_1 - swaps nodes from left to right
+ * @list: parameter
+ * @head: parameter
+ * @aux: parameter
  */
 
-void shell_sort(int *array, size_t size)
+void swap_1(listint_t **list, listint_t *head, listint_t *aux)
 {
-	unsigned int i = 0, j = 0, gap = 0;
-	int aux = 0;
+	if (head->prev)
+		head->prev->next = aux;
+	else
+		*list = aux;
+	if (aux->next)
+		aux->next->prev = head;
+	head->next = aux->next;
+	aux->prev = head->prev;
+	aux->next = head;
+	head->prev = aux;
+	print_list(*list);
+}
 
-	if (array == NULL || size < 2)
-		return;
+/**
+ * swap_2 - swaps nodes from right to left
+ * @list: parameter
+ * @head: parameter
+ * @aux: parameter
+ */
 
-	while (gap < size / 3)
-		gap = gap * 3 + 1;
+void swap_2(listint_t **list, listint_t *head, listint_t *aux)
+{
+	aux = head->prev;
+	aux->next->prev = aux->prev;
+	if (aux->prev)
+		aux->prev->next = aux->next;
+	else
+		*list = aux->next;
+	aux->prev = aux->next;
+	aux->next = aux->next->next;
+	aux->prev->next = aux;
+	if (aux->next)
+		aux->next->prev = aux;
+	print_list(*list);
+}
 
-	for (; gap > 0; gap = (gap - 1) / 3)
+/**
+ * cocktail_sort_list - sorts a doubly linked list of integers
+ * @list: parameter
+ **/
+
+void cocktail_sort_list(listint_t **list)
+{
+	listint_t *j, *a;
+	int b = 1;
+
+	if (list)
 	{
-		for (i = gap; i < size; i++)
+		j = *list;
+		while (b != 0)
 		{
-			aux = array[i];
-			for (j = i; j >= gap && array[j - gap] > aux;
-				 j -= gap)
+			b = 0;
+			while (j->next)
 			{
-				if (array[j] != array[j - gap])
-					array[j] = array[j - gap];
+				if (j->n > j->next->n)
+				{
+					a = j->next;
+					swap_1(list, j, a);
+					b = 1;
+				}
+				else
+					j = j->next;
 			}
-			if (array[j] != aux)
-				array[j] = aux;
+			if (b == 0)
+				break;
+			b = 0;
+			while (j->prev)
+			{
+				if (j->prev->n > j->n)
+				{
+					swap_2(list, j, a);
+					b = 1;
+				}
+				else
+					j = j->prev;
+			}
 		}
-		print_array(array, size);
 	}
 }
