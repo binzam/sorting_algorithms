@@ -34,6 +34,7 @@ void merge(size_t low, size_t mi, size_t high, int *dest, int *src);
 void merge_sort(int *array, size_t size);
 void merge_partition(size_t low, size_t high, int *array, int *base);
 void swap_root(int *array, size_t root, size_t high, size_t size);
+void heap_sort(int *array, size_t size);
 void quick_sort_hoare(int *array, size_t size);
 
 
